@@ -1,27 +1,75 @@
-# NgxGraphqlApp
+# NGX-GraphQL
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.0-rc.7.
+Tiny GraphQL client for Angular
 
-## Development server
+## Usage
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+First, install:
 
-## Code scaffolding
+    yarn add ngx-graphql
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Then, configure:
 
-## Build
+```typescript
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+import { configureGraphQL } from "ngx-graphql"; // <-- Import configureGraphQL
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+import { AppComponent } from "./app.component";
 
-## Running unit tests
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    HttpClientModule // <-- REQUIRED
+  ],
+  providers: [
+    configureGraphQL({
+      url: "https://your-graphql.api" // <-- configure GraphQL
+    })
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Finally, use it:
 
-## Running end-to-end tests
+```typescript
+import { Component, OnInit } from "@angular/core";
+import { GraphQL } from "ngx-graphql"; // <-- import `GraphQL` service
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+@Component({
+  selector: "app-list",
+  template: `
+    <ul>
+      <li *ngFor="let post of posts | async">
+        {{ post.title }}
+      </li>
+    </ul>
+  `
+})
+export class ListComponent implements OnInit {
+  posts: Observable<Post[]>;
 
-## Further help
+  constructor(private graphql: GraphQL) {} // <-- include it in a component
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+  ngOnInit() {
+    this.posts = this.graphql
+      .request( // <-- pass a query
+        `
+          query allPosts {
+            posts {
+              id
+              title
+            }
+          }
+        `
+      )
+      .pipe(map(result => result.data.posts));
+  }
+}
+```
