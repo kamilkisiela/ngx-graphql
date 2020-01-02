@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "ngx-graphql-app": {
@@ -70,12 +70,6 @@
             }
           }
         },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "ngx-graphql-app:build"
-          }
-        },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -116,6 +110,46 @@
             "production": {
               "devServerTarget": "ngx-graphql-app:serve:production"
             }
+          }
+        }
+      }
+    },
+    "ngx-graphql": {
+      "projectType": "library",
+      "root": "projects/ngx-graphql",
+      "sourceRoot": "projects/ngx-graphql/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-graphql/tsconfig.lib.json",
+            "project": "projects/ngx-graphql/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-graphql/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-graphql/src/test.ts",
+            "tsConfig": "projects/ngx-graphql/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-graphql/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-graphql/tsconfig.lib.json",
+              "projects/ngx-graphql/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }

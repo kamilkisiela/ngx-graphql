@@ -57,7 +57,6 @@
       true,
       "ignore-params"
     ],
-    "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-var-requires": false,
@@ -69,7 +68,7 @@
     "ordered-imports": false,
     "quotemark": [
       true,
-      "single"
+      "double"
     ],
     "trailing-comma": false,
     "no-conflicting-lifecycle": true,
